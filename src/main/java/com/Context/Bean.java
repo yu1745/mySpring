@@ -1,5 +1,12 @@
+/*
 package com.Context;
 
-public class Bean {
+import lombok.Getter;
+import lombok.Setter;
 
+public class Bean {
+    @Getter
+    @Setter
+    Object object;
 }
+*/
