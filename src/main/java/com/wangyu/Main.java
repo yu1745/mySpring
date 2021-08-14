@@ -10,6 +10,8 @@ public class Main {
         var context = new MyApplicationContext(ApplicationConfig.class);
         var userService  = context.getBean("userService");
         System.out.println(userService);
+        ((UserService)userService).test();
+        System.out.println(((UserService) userService).getBeanName());
         new CountDownLatch(1).await();
     }
 }

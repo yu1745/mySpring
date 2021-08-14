@@ -1,2 +1,5 @@
-package com.Context;public @interface BeanNameAware {
+package com.Context;
+
+public interface BeanNameAware {
+    void setBeanName(String name);
 }

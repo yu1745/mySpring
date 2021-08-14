@@ -20,7 +20,6 @@ public class MyApplicationContext {
     public MyApplicationContext(Class config) {
         this.config = config;
         singletonBeans = new ConcurrentHashMap<>();
-//        beanDefinitionMap = new ConcurrentHashMap();
         scan(config);
         init();
     }
@@ -74,9 +73,23 @@ public class MyApplicationContext {
     }
 
     private Object createBean(BeanDefinition definition) {
-        System.out.println("MyApplicationContext.createBean");
         try {
-            return definition.getClazz().getDeclaredConstructor().newInstance();
+            final var clazz = definition.getClazz();
+            var instance = clazz.getDeclaredConstructor().newInstance();
+            Arrays.stream(clazz.getDeclaredFields())
+                    .filter(f->f.isAnnotationPresent(Autowired.class))
+                    .forEach(f->{
+                        try {
+                            f.setAccessible(true);
+                            f.set(instance,getBean(f.getName()));
+                        } catch (IllegalAccessException e) {
+                            e.printStackTrace();
+                        }
+                    });
+            if(instance instanceof BeanNameAware){
+                ((BeanNameAware)instance).setBeanName(definition.getName());
+            }
+            return instance;
         } catch (InstantiationException | NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
             e.printStackTrace();
         }

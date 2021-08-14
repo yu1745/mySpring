@@ -13,4 +13,6 @@ public class BeanDefinition {
     @Getter
     @Setter
     private Class clazz;
+
+
 }
